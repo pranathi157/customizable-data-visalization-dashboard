@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Excel and CSV file processing -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <!-- Export Dashboard as Image -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+    <!-- Export Dashboard as PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">▦</span>
+                <h2>Customizable DataVizualization Dashboard</h2>
+            </div>
+
+            <p class="menu-title">MENU</p>
+
+            <nav>
+                <a href="#overview" class="nav-link active">⌂ Dashboard</a>
+                <a href="#upload" class="nav-link">↑ Upload Dataset</a>
+                <a href="#data" class="nav-link">▤ Data Preview</a>
+                <a href="#visualization" class="nav-link">▥ Visualization</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <p>Customizable Data</p>
+                <p>Visualization Dashboard</p>
+            </div>
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- TOP BAR -->
+            <header class="topbar">
+                <div>
+                    <h2>Dashboard Overview</h2>
+                    <p>Upload, analyze and visualize your data.</p>
+                </div>
+            </header>
+
+
+            <!-- OVERVIEW -->
+            <section id="overview">
+                <h2 class="section-title">Overview</h2>
+
+                <div class="stats-container">
+
+                    <div class="stat-card">
+                        <div class="stat-icon blue">▤</div>
+                        <p>Total Rows</p>
+                        <h2 id="totalRows">0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon purple">▥</div>
+                        <p>Total Columns</p>
+                        <h2 id="totalColumns">0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">✓</div>
+                        <p>Cleaned Rows</p>
+                        <h2 id="cleanedRows">0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange">▣</div>
+                        <p>Charts Created</p>
+                        <h2 id="totalCharts">0</h2>
+                    </div>
+
+                </div>
+            </section>
+
+
+            <!-- UPLOAD DATASET -->
+            <section id="upload" class="content-card">
+                <h2 class="section-title">Upload Dataset</h2>
+                <p class="description">
+                    Upload your CSV or Excel file to get started.
+                </p>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">↑</div>
+
+                    <h3>Drag and drop your file here</h3>
+                    <p>or click the button below</p>
+
+
+                    <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" hidden>
+
+                    <button type="button" class="primary-btn" id="browseBtn"
+                        onclick="document.getElementById('fileInput').click()">
+                        Browse Files
+                    </button>
+
+                    <p class="file-info">
+                        Supported formats: CSV, XLSX, XLS
+                    </p>
+
+                </div>
+
+                <p id="fileName" class="file-name"></p>
+                <p id="uploadMessage" class="message"></p>
+            </section>
+
+
+            <!-- DATA PREVIEW -->
+            <section id="data" class="content-card">
+                <div class="section-heading">
+                    <div>
+                        <h2 class="section-title">Data Preview</h2>
+                        <p class="description">
+                            View and clean your uploaded dataset.
+                        </p>
+                    </div>
+
+                    <button class="secondary-btn" id="cleanBtn">
+                        Clean Data
+                    </button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Dataset preview will appear here</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    No dataset uploaded yet.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p id="cleanMessage" class="message"></p>
+            </section>
+
+
+            <!-- VISUALIZATION -->
+            <section id="visualization" class="content-card">
+                <h2 class="section-title">Create Visualization</h2>
+
+                <p class="description">
+                    Select your data and create customized charts.
+                </p>
+
+                <div class="chart-controls">
+
+                    <div class="form-group">
+                        <label for="chartType">Chart Type</label>
+
+                        <select id="chartType">
+                            <option value="bar">Bar Chart</option>
+                            <option value="line">Line Chart</option>
+                            <option value="pie">Pie Chart</option>
+                            <option value="doughnut">Doughnut Chart</option>
+                            <option value="radar">Radar Chart</option>
+                            <option value="polarArea">Polar Area Chart</option>
+                            <option value="scatter">Scatter Chart</option>
+                            <option value="bubble">Bubble Chart</option>
+                            <option value="area">Area Chart</option>
+                            <option value="horizontalBar">Horizontal Bar Chart</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="xColumn">X-Axis / Labels</label>
+                        <select id="xColumn">
+                            <option value="">Select column</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="yColumn">Y-Axis / Values</label>
+                        <select id="yColumn">
+                            <option value="">Select column</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="chartColor">Chart Color</label>
+                        <input type="color" id="chartColor" value="#6366f1">
+                    </div>
+
+                    <button class="primary-btn" id="generateBtn">
+                        Generate Chart
+                    </button>
+
+                </div>
+                <!-- EXPORT DASHBOARD -->
+                <div class="export-section">
+
+                    <h3>Export Dashboard</h3>
+
+                    <p>Download your dashboard as an image or PDF.</p>
+
+                    <div class="export-buttons">
+
+                        <button type="button" id="exportPNG" class="export-btn png-btn">
+                            ↓ Export as PNG
+                        </button>
+
+                        <button type="button" id="exportPDF" class="export-btn pdf-btn">
+                            ↓ Export as PDF
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-heading">
+                        <h3>Visualization Preview</h3>
+                        <span id="chartStatus">No chart generated</span>
+                    </div>
+
+                    <canvas id="myChart"></canvas>
+                </div>
+            </section>
+
+            <footer>
+                <p>© 2026 | Customizable Data Visualization Dashboard</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
